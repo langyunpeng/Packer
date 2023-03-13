@@ -65,7 +65,6 @@ build {
 
 	###########Install Docker################################
     provisioner "shell" {
-    pause_before = "3s"
     inline = [
 							"sudo apk update",
     					"sudo apk add docker docker-compose",
@@ -75,6 +74,7 @@ build {
     					"sudo addgroup vagrant docker",
       				"sudo service docker start"
              ]
+    pause_after = "10s"
   }
   ###########Install Docker################################
 
@@ -83,9 +83,16 @@ build {
   provisioner "shell" {
     inline = [
 							"sudo docker pull portainer/portainer-ce:latest",
-    					"sudo docker volume create portainer_data",
+    					"sudo docker volume create portainer_data"
+             ]
+  }
+
+  provisioner "shell" {
+		pause_before = "3s"
+    inline = [
     					"sudo docker run -d -p 8000:8000 -p 9000:9000 --name=portainer-1 --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce"
              ]
+    pause_after = "10s"
   }
   ###########Enable Portainer################################
 
@@ -103,4 +110,10 @@ build {
 	}
 	###########Add new box to Vagrant & Init new VM############
 
+
+	post-processor "checksum" {
+		checksum_types = ["md5","sha512"]
+		keep_input_artifact = true
+		output = "build.checksum"
+  }
 }
