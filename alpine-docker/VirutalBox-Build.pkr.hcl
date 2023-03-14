@@ -9,7 +9,7 @@ packer {
 
 variables {
 	#Give a name for this build as your wish
-	build_for = "alpine-docker"
+	build_for = "alpine-docker-cloudcmd"
 	
 	#Give a name for vagrant folder, by default it is the name of VM in VirtualBox 
 	#vagrant_newvm_dir = "vagrant"
@@ -17,10 +17,10 @@ variables {
 
 	
 	#The source box which this build based on
-	base_box = "generic/alpine312"
+	base_box = "generic/alpine317"
 
 	#The name of generated box which will be added to vagrant box after the build
-	box_name = "alpine-docker"
+	box_name = "alpine-docker-cloudcmd"
 
 	
 	#------------------------------
@@ -78,8 +78,25 @@ build {
   }
   ###########Install Docker################################
 
+	###########Install CloudCMD###############################
+  provisioner "shell" {
+    inline = [
+							"sudo apk update",
+							"sudo mkdir ~/.npm",
+							"sudo chown -R $(whoami) ~/.npm",
+							
+    					"sudo apk add nodejs-current npm",
 
-	###########Enable Portainer################################
+    					"sudo npm i cloudcmd -g",
+    					
+    					"sudo chown -R $(whoami) $(npm config get prefix)/lib"
+             ]
+  }
+
+  ###########End Install CloudCMD############################
+  
+
+	###########Enable Portainer###############################
   provisioner "shell" {
     inline = [
 							"sudo docker pull portainer/portainer-ce:latest",
@@ -90,9 +107,9 @@ build {
   provisioner "shell" {
 		pause_before = "3s"
     inline = [
-    					"sudo docker run -d -p 8000:8000 -p 9000:9000 --name=portainer-1 --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce"
+    					"sudo docker run -d -p 8008:8000 -p 9000:9000 --name=portainer-1 --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce"
              ]
-    pause_after = "10s"
+    pause_after = "5s"
   }
   ###########Enable Portainer################################
 
