@@ -62,13 +62,55 @@ build {
   
   sources = ["source.vagrant.s1"]
 
+	###########Change source to Ali and Update##################	
+  provisioner "file" {
+    source = "Ali_sources.list"
+    destination = "/tmp/ali_sources.list"
+  }
+
+  provisioner "shell" {
+    inline = ["echo '-----------------------'",
+    					"sudo mv /etc/apt/sources.list /etc/apt/sources.list.offical",
+    					"sudo cp /tmp/ali_sources.list /etc/apt/sources.list.ali",
+    					"sudo cp /tmp/ali_sources.list /etc/apt/sources.list"
+    					]
+  }
+
+  provisioner "shell" {
+    inline = [
+    					"sudo apt update -y && sudo apt upgrade -y"
+             ]
+  }
+  ###########Change source to Ali and Update##################
+
+  ###########Install Gnome Mini###############################
+  provisioner "shell" {
+    inline = [
+    					"echo '----START INSTALL GNOME------'",
+    					"sudo apt install -y ubuntu-desktop-minimal",
+    					"sudo systemctl set-default graphical.target",
+    					"echo '----END INSTALL GNOME------'"
+    				 ]
+  }
+  ###########Install Gnome Mini###############################
 
 
+	###########Install Firefox################################
+  provisioner "shell" {
+    inline = [
+							"sudo apt install -y firefox"
+             ]
+  }
+  ###########Install Firefox################################
 
+  
 	###########Install Docker-CE################################
   provisioner "shell-local" {
 		#the ou put dir is mounted as /vagrant as per defined in the VirtualBox-Build-Template.tpl
-    inline = ["copy /Y .\\pkg\\*.* .\\${var.build_working_dir}\\pkg"]
+    inline = [
+							"mkdir .\\${var.build_working_dir}\\pkg",
+    					"copy /Y .\\pkg\\*.* .\\${var.build_working_dir}\\pkg\\"
+    					]
   }
 
     provisioner "shell" {
