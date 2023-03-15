@@ -1,0 +1,5 @@
+packer build -force .
+
+or
+
+packer build -force VirutalBox-Build.pkr.hcl
