@@ -96,11 +96,11 @@ build {
 
 
 	###########Install Firefox################################
-  provisioner "shell" {
-    inline = [
-							"sudo apt install -y firefox"
-             ]
-  }
+  #provisioner "shell" {
+  #  inline = [
+	#						"sudo apt install -y firefox"
+  #           ]
+  #}
   ###########Install Firefox################################
 
   
