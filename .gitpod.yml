@@ -1,0 +1,4 @@
+tasks:
+  - command: |
+      [[ $MY_PS1 ]] && echo "PS1='$MY_PS1'" >> ~/.bashrc
+      [[ $MY_PS1 ]] && export PS1="$MY_PS1"
